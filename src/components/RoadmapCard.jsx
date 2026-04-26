@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
+/**
+ * ProgressBar component displays a progress bar based on the total and done values.
+ * @param {Object} props - Component properties
+ * @param {number} props.total - Total number of items
+ * @param {number} props.done - Number of completed items
+ * @returns {JSX.Element} ProgressBar component
+ */
 function ProgressBar({ total, done }) {
   const percent = total > 0 ? (done / total) * 100 : 0;
 
@@ -13,6 +20,14 @@ function ProgressBar({ total, done }) {
   );
 }
 
+/**
+ * TopicCard component represents a single topic with a checkbox.
+ * @param {Object} props - Component properties
+ * @param {string} props.name - Topic name
+ * @param {boolean} props.checked - Whether the topic is checked
+ * @param {function} props.onToggle - Callback function for checkbox toggle
+ * @returns {JSX.Element} TopicCard component
+ */
 function TopicCard({ name, checked, onToggle }) {
   return (
     <label className="topic-card">
@@ -29,16 +44,31 @@ function TopicCard({ name, checked, onToggle }) {
   );
 }
 
+/**
+ * RoadmapCard component displays a roadmap with progress bar and topics list.
+ * @param {Object} props - Component properties
+ * @param {Object} props.roadmap - Roadmap data
+ * @param {function} props.onUpdate - Callback function for updating roadmap
+ * @param {function} props.onDelete - Callback function for deleting roadmap
+ * @returns {JSX.Element} RoadmapCard component
+ */
 const RoadmapCard = ({ roadmap, onUpdate, onDelete }) => {
   const [topics, setTopics] = useState(roadmap.topics);
   const [isVisible, setIsVisible] = useState(false);
   const totalTopics = topics.length;
   const doneTopics = topics.filter((topic) => topic.checked).length;
 
+  /**
+   * Updates topics state when roadmap topics change.
+   */
   useEffect(() => {
     setTopics(roadmap.topics);
   }, [roadmap.topics]);
 
+  /**
+   * Toggles a topic's checked state and updates roadmap.
+   * @param {number} index - Index of the topic to toggle
+   */
   const handleToggleTopic = (index) => {
     const updatedTopics = topics.map((topic, i) =>
       i === index ? { ...topic, checked: !topic.checked } : topic
@@ -47,6 +77,9 @@ const RoadmapCard = ({ roadmap, onUpdate, onDelete }) => {
     onUpdate({ ...roadmap, topics: updatedTopics });
   };
 
+  /**
+   * Deletes the roadmap after confirmation.
+   */
   const handleDeleteClick = () => {
     if (window.confirm(`Are you sure you want to delete the "${roadmap.title}" roadmap?`)) {
       onDelete(roadmap.id);
